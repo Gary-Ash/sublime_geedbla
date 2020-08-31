@@ -1,0 +1,8 @@
+[
+    { "caption": "Gee Dbl A: Comment Header",                     "command": "header_comment" },
+    { "caption": "Gee Dbl A: Box Comment",                        "command": "box_comment" },
+    { "caption": "Gee Dbl A: Seperator Line Comment",             "command": "seperator_line_comment" },
+    { "caption": "Gee Dbl A: Universal Source Formatter",         "command": "universal_format_source" },
+    { "caption": "Gee Dbl A: Edit Z Shell Configuration",         "command": "edit_zsh_config_files" },
+    { "caption": "Gee Dbl A: Create New File From Selection",     "command": "new_from_selection" },
+]

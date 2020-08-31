@@ -1,0 +1,88 @@
+[
+  {
+    "caption": "Edit",
+    "mnemonic": "E",
+    "id": "edit",
+    "children": [
+      {
+        "caption": "Gee Dbl A",
+        "id": "edit-geedbla",
+        "children": [
+          {
+            "caption": "Box Comment",
+            "command": "box_comment"
+          },
+          {
+            "caption": "File Header Comment",
+            "command": "header_comment"
+          },
+          {
+            "caption": "Seperator Line Comment",
+            "command": "seperator_line_comment"
+          },
+          {
+            "caption": "-"
+          },
+          {
+            "caption": "Format The File",
+            "command": "universal_format_source"
+          },
+          {
+            "caption": "Edit Shell Configuration",
+            "command": "edit_zsh_config_files"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "caption": "Selection",
+    "mnemonic": "E",
+    "id": "selection",
+    "children": [
+      {
+        "caption": "-"
+      },
+      {
+        "caption": "Gee Dbl A",
+        "id": "selection-geedbla",
+        "children": [
+          {
+            "caption": "Create New File From Selection",
+            "command": "new_from_selection"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "caption": "Preferences",
+    "mnemonic": "n",
+    "id": "preferences",
+    "children": [
+      {
+        "caption": "Package Settings",
+        "mnemonic": "P",
+        "id": "package-settings",
+        "children": [
+          {
+            "caption": "Gee Dbl A",
+            "children": [
+              {
+                "command": "open_file",
+                "caption": "Settings",
+                "args": {
+                  "file": "${packages}/User/sublime_geedbla.sublime-settings",
+                  "contents": "{\n\t$0\n}\n"
+                }
+              },
+              {
+                "caption": "-"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

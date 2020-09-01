@@ -7,7 +7,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  27-Aug-2020  8:31pm
-# Modified :  31-Aug-2020  3:36pm
+# Modified :   1-Sep-2020  2:47pm
 #
 # Copyright © 2020 By Gee Dbl A All rights reserved.
 # ****************************************************************************************
@@ -18,6 +18,7 @@ import sublime
 import sublime_plugin
 import sublime_geedbla.utilities
 import sublime_geedbla.preferred_setup
+from pathlib import Path
 
 global fileHeader
 fileHeader = '''top_line
@@ -31,6 +32,18 @@ inner_line Modified :
 inner_line
 inner_line Copyright © YEAR_PLACEHOLDER By ORGANIZATION_PLACEHOLDER All rights reserved.
 last_line '''
+
+def plugin_loaded():
+    fileHeaderTemplateFile = sublime.packages_path() + "/User/sublime_geedbla_file_header.txt"
+    chk_file = Path(fileHeaderTemplateFile)
+    if chk_file.is_file():
+        fileHandle = open(fileHeaderTemplateFile, "r")
+        fileHeader = fileHandle.read()
+    else:
+        fileHandle = open(fileHeaderTemplateFile, "w")
+        fileHeader = fileHandle.write(fileHeader)
+
+    fileHandle.close()
 
 
 def buildFileHeader(view, do_value_replacement=True):
@@ -153,12 +166,12 @@ class UpdateCommentHeaderCommand(sublime_plugin.TextCommand):
         # --------------------------------------------------------------------------------
         # update authorship
         # --------------------------------------------------------------------------------
-        r = self.view.find(".*Author.*", 0)
+        r = self.view.find(".*(Author|Programer).*", 0)
         if not r.empty() and "comment" in self.view.scope_name(r.a):
             original_author_line_region = self.view.line(r)
             (author_row, _) = self.view.rowcol(original_author_line_region.a)
             original_author_line = self.view.substr(original_author_line_region)
-            new_author_location = re.search(".*Author.*", hdr)
+            new_author_location = re.search(".*(Author|Programer).*", hdr)
             if new_author_location is not None:
                 new_author_line = hdr[new_author_location.start(): new_author_location.end()]
                 matches = re.match(r"(.*Author\s*[^a-zA-Z0-9]\s*)([a-zA-Z]*\s[a-zA-Z]*)\s*(.*)", original_author_line)

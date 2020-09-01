@@ -7,12 +7,29 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  27-Aug-2020  8:31pm
-# Modified :  31-Aug-2020  3:38pm
+# Modified :   1-Sep-2020  3:17pm
 #
 # Copyright © 2020 By Gee Dbl A All rights reserved.
 # ****************************************************************************************
 import os
 import sublime
+from pathlib import Path
+
+
+def plugin_loaded():
+    settingsFile = sublime.packages_path() + "/User/sublime_geedbla.sublime-settings"
+    chk_file = Path(settingsFile)
+    if not chk_file.is_file():
+        settings = sublime.load_settings("sublime_geedbla.sublime-settings")
+        settings.set("line_length", 90)
+        settings.set("author", "")
+        settings.set("email", "")
+        settings.set("organization", "")
+        sublime.save_settings("sublime_geedbla.sublime-settings")
+
+    load_aettings()
+    settings = sublime.load_settings("sublime_geedbla.sublime-settings")
+    settings.add_on_change("sublime_geedbla.sublime-settings", lambda: load_aettings())
 
 
 def load_aettings():
@@ -28,11 +45,6 @@ def load_aettings():
     email_address = settings.get("email", "gary.ash@icloud.com")
     organization = settings.get("organization", "Gee Dbl A")
 
-
-def plugin_loaded():
-    load_aettings()
-    settings = sublime.load_settings("sublime_geedbla.sublime-settings")
-    settings.add_on_change("sublime_geedbla.sublime-settings", lambda: load_aettings())
 
 
 def plugin_unloaded():

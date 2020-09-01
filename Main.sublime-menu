@@ -28,6 +28,13 @@
             "command": "universal_format_source"
           },
           {
+            "caption": "-"
+          },
+          {
+            "caption": "Edit SFile Header Comment Template",
+            "command": "edit_file_header_template"
+          },
+          {
             "caption": "Edit Shell Configuration",
             "command": "edit_zsh_config_files"
           }

@@ -7,7 +7,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  27-Aug-2020  8:31pm
-# Modified :   1-Sep-2020  2:47pm
+# Modified :   1-Sep-2020  6:53pm
 #
 # Copyright © 2020 By Gee Dbl A All rights reserved.
 # ****************************************************************************************
@@ -32,6 +32,7 @@ inner_line Modified :
 inner_line
 inner_line Copyright © YEAR_PLACEHOLDER By ORGANIZATION_PLACEHOLDER All rights reserved.
 last_line '''
+
 
 def plugin_loaded():
     fileHeaderTemplateFile = sublime.packages_path() + "/User/sublime_geedbla_file_header.txt"
@@ -119,6 +120,13 @@ def buildFileHeader(view, do_value_replacement=True):
             header = header.replace(key, value_replacements[key])
 
     return (landing_line, header)
+
+
+class EditFileHeaderTemplate(sublime_plugin.WindowCommand):
+    def run(self):
+        fileHeaderTemplateFile = sublime.packages_path() + "/User/sublime_geedbla_file_header.txt"
+        if os.path.exists(fileHeaderTemplateFile):
+            self.window.open_file(fileHeaderTemplateFile)
 
 
 class UpdateCommentHeaderCommand(sublime_plugin.TextCommand):

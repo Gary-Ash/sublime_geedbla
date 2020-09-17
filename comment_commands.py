@@ -7,7 +7,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  27-Aug-2020  8:31pm
-# Modified :   1-Sep-2020  6:53pm
+# Modified :  14-Sep-2020  8:11pm
 #
 # Copyright © 2020 By Gee Dbl A All rights reserved.
 # ****************************************************************************************
@@ -20,7 +20,6 @@ import sublime_geedbla.utilities
 import sublime_geedbla.preferred_setup
 from pathlib import Path
 
-global fileHeader
 fileHeader = '''top_line
 inner_line FILENAME_PLACEHOLDER
 inner_line
@@ -35,6 +34,12 @@ last_line '''
 
 
 def plugin_loaded():
+    loadTemplateFile()
+
+
+def loadTemplateFile():
+    global fileHeader
+
     fileHeaderTemplateFile = sublime.packages_path() + "/User/sublime_geedbla_file_header.txt"
     chk_file = Path(fileHeaderTemplateFile)
     if chk_file.is_file():
@@ -48,13 +53,15 @@ def plugin_loaded():
 
 
 def buildFileHeader(view, do_value_replacement=True):
+    global fileHeader
+
     shebangs = {
         "Perl": "perl",
         "Python": "python3",
         "Ruby": "ruby",
         "Awk": "awk",
         "AppleScript": "osascript",
-        "AppleScript (Binary)" : "osascript",
+        "AppleScript (Binary)": "osascript",
     }
 
     (row, column) = sublime_geedbla.utilities.get_cursor_position(view)
@@ -129,6 +136,14 @@ class EditFileHeaderTemplate(sublime_plugin.WindowCommand):
             self.window.open_file(fileHeaderTemplateFile)
 
 
+class ExecutionBitEventListener(sublime_plugin.EventListener):
+    def on_post_save(self, view):
+        fileHeaderTemplateFile = sublime.packages_path() + "/User/sublime_geedbla_file_header.txt"
+        filename = view.file_name()
+        if filename == fileHeaderTemplateFile:
+            loadTemplateFile()
+
+
 class UpdateCommentHeaderCommand(sublime_plugin.TextCommand):
     def run(self, edit):
         r = self.view.find("Copyright © .* By %s All rights reserved." % sublime_geedbla.utilities.organization, 0)
@@ -161,37 +176,40 @@ class UpdateCommentHeaderCommand(sublime_plugin.TextCommand):
         # --------------------------------------------------------------------------------
         # update the file modification time stamp
         # --------------------------------------------------------------------------------
-        r = self.view.find("Modified *:*", 0)
+        r = self.view.find("(Modified *:\s*)(.*)", 0)
         if not r.empty() and "comment" in self.view.scope_name(r.a):
-            modified_region = self.view.line(r)
-            r.b = modified_region.b
-            now = datetime.datetime.now()
-            timestamp = now.strftime("%e-%b-%Y %_I:%M")
-            timestamp += now.strftime("%p").lower()
-            timestamp = "Modified :  " + timestamp
-            self.view.replace(edit, r, timestamp)
+            r = self.view.find(":\s*(.*)", r.a)
+            if not r.empty() and "comment" in self.view.scope_name(r.a):
+                r.a += 3
+                now = datetime.datetime.now()
+                timestamp = now.strftime("%e-%b-%Y %_I:%M")
+                timestamp += now.strftime("%p").lower()
+                self.view.replace(edit, r, timestamp)
 
         # --------------------------------------------------------------------------------
         # update authorship
         # --------------------------------------------------------------------------------
-        r = self.view.find(".*(Author|Programer).*", 0)
+        r = self.view.find("(.*)(Programmer|Author)(.*:)(.*)", 0)
         if not r.empty() and "comment" in self.view.scope_name(r.a):
             original_author_line_region = self.view.line(r)
             (author_row, _) = self.view.rowcol(original_author_line_region.a)
             original_author_line = self.view.substr(original_author_line_region)
-            new_author_location = re.search(".*(Author|Programer).*", hdr)
+            new_author_location = re.search("(.*)(Programmer|Author)(.*:)(.*)", hdr)
             if new_author_location is not None:
                 new_author_line = hdr[new_author_location.start(): new_author_location.end()]
-                matches = re.match(r"(.*Author\s*[^a-zA-Z0-9]\s*)([a-zA-Z]*\s[a-zA-Z]*)\s*(.*)", original_author_line)
-                author_name = matches.group(2)
-                author_email = matches.group(3)
-
+                matches = re.match(r"(.*(Programmer|Author)(.*:\s*))([A-z0-9]*\s*[A-z0-9]*)\s*(<[A-z0-9.]*@[A-z0-9.]*>)", original_author_line)
+                author_name = matches.group(4)
+                author_email = matches.group(5)
                 if author_name == sublime_geedbla.utilities.author and author_email != sublime_geedbla.utilities.email_address:
                     self.view.replace(edit, original_author_line_region, new_author_line)
                     return
 
                 if author_name != sublime_geedbla.utilities.author:
-                    new_author_search = original_author_line.replace("Author", "      ")
+                    if "Author" in original_author_line:
+                        new_author_search = original_author_line.replace("Author", "      ")
+                    if "Programmer" in original_author_line:
+                        new_author_search = original_author_line.replace("Programmer", "          ")
+
                     r = self.view.find(new_author_search, 0, sublime.LITERAL)
                     if r.empty():
                         author_comment = new_author_line + "\n" + new_author_search

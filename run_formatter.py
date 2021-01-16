@@ -8,7 +8,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  27-Aug-2020  8:31pm
-# Modified :  31-Aug-2020  3:40pm
+# Modified :  20-Oct-2020  3:05pm
 #
 # Copyright © 2020 By Gee Dbl A All rights reserved.
 # ****************************************************************************************
@@ -69,7 +69,6 @@ class UniversalFormatSource(sublime_plugin.TextCommand):
     def pick_formatter(self, view):
         command = []
         language = get_syntax(view)
-
         settings = sublime.load_settings("sublime_geedbla.sublime-settings")
 
         if (language == "C" or language == "C++" or language == "C#" or language == "Java" or language == "Objective-C" or language == "Objective-C++"):
@@ -84,19 +83,22 @@ class UniversalFormatSource(sublime_plugin.TextCommand):
             formatter_exec = settings.get("uncrustify exec", "/usr/local/bin/uncrustify")
             cfg_file = settings.get("uncrustify config", "-c /Users/garyash/.config/.uncrustify")
             cfg_list = cfg_file.split()
-            command = [formatter_exec, "-l", uncrustify_languages[language]].extend(cfg_list)
+            command = [formatter_exec, "-l", uncrustify_languages[language]]
+            command.extend(cfg_list)
             return command
         elif (language == "Perl"):
             formatter_exec = settings.get("perltidy exec", "/usr/local/bin/perltidy")
             cfg_file = settings.get("perltidy config", "-pro=/Users/garyash/.config/.perltidyrc -st")
             cfg_list = cfg_file.split()
-            command = ["perl", formatter_exec].extend(cfg_list)
+            command = ["perl", formatter_exec]
+            command.extend(cfg_list)
             return command
         elif (language == "Swift"):
             formatter_exec = settings.get("swiftformat exec", "/usr/local/bin/swiftformat")
             cfg_file = settings.get("swiftformat config", "--config /Users/garyash/.config/.swiftformat")
             cfg_list = cfg_file.split()
-            command = [formatter_exec].extend(cfg_list)
+            command = [formatter_exec]
+            command.extend(cfg_list)
             return command
         elif (language == "Go"):
             cfg_file = settings.get("go config", "")

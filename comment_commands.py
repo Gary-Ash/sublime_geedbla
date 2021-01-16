@@ -7,9 +7,9 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  27-Aug-2020  8:31pm
-# Modified :  14-Sep-2020  8:11pm
+# Modified :   9-Jan-2021  8:12pm
 #
-# Copyright © 2020 By Gee Dbl A All rights reserved.
+# Copyright © 2020-2021 By Gee Dbl A All rights reserved.
 # ****************************************************************************************
 import re
 import os
@@ -161,30 +161,45 @@ class UpdateCommentHeaderCommand(sublime_plugin.TextCommand):
             r = self.view.find("<Untitled-File>", 0)
             if not r.empty() and "comment" in self.view.scope_name(r.a):
                 self.view.replace(edit, r, new_file_name)
-                return
-
-            new_file_name_location = re.search(new_file_name, hdr)
-            if new_file_name_location is not None:
-                file_name_search = hdr[0: new_file_name_location.start() - 1]
-                r = self.view.find(file_name_search, 0, sublime.LITERAL)
-                if not r.empty() and "comment" in self.view.scope_name(r.a):
-                    file_name_region = self.view.line(r)
-                    r.a = r.b + 1
-                    r.b = file_name_region.b
-                    self.view.replace(edit, r, new_file_name)
+            else:
+                new_file_name_location = re.search(new_file_name, hdr)
+                if new_file_name_location is not None:
+                    file_name_search = hdr[0: new_file_name_location.start() - 1]
+                    r = self.view.find(file_name_search, 0, sublime.LITERAL)
+                    if not r.empty() and "comment" in self.view.scope_name(r.a):
+                        file_name_region = self.view.line(r)
+                        r.a = r.b + 1
+                        r.b = file_name_region.b
+                        self.view.replace(edit, r, new_file_name)
 
         # --------------------------------------------------------------------------------
         # update the file modification time stamp
         # --------------------------------------------------------------------------------
-        r = self.view.find("(Modified *:\s*)(.*)", 0)
+        r = self.view.find("Modified :.*$", 0)
         if not r.empty() and "comment" in self.view.scope_name(r.a):
-            r = self.view.find(":\s*(.*)", r.a)
-            if not r.empty() and "comment" in self.view.scope_name(r.a):
-                r.a += 3
-                now = datetime.datetime.now()
-                timestamp = now.strftime("%e-%b-%Y %_I:%M")
-                timestamp += now.strftime("%p").lower()
-                self.view.replace(edit, r, timestamp)
+            now = datetime.datetime.now()
+            timestamp = now.strftime("  %e-%b-%Y %_I:%M")
+            timestamp += now.strftime("%p").lower()
+
+            r2 = self.view.find(":.*", r.a)
+            if not r2.empty() and "comment" in self.view.scope_name(r.a):
+                r2.a = r2.a + 1
+                self.view.erase(edit, r2)
+                self.view.insert(edit, r2.a, timestamp)
+            else:
+                self.view.insert(edit, r.b, timestamp)
+
+        # --------------------------------------------------------------------------------
+        # update the Copyright notice
+        # --------------------------------------------------------------------------------
+        r = self.view.find("Copyright © .* By %s All rights reserved." % sublime_geedbla.utilities.organization, 0)
+        if not r.empty() and "comment" in self.view.scope_name(r.a):
+            year_region = self.view.find("20[0-9]*", r.a)
+            last_year = self.view.substr(year_region)
+            if int(last_year) < now.year:
+                s = "Copyright © %s-%d By %s All rights reserved." % \
+                    (last_year, datetime.datetime.now().year, sublime_geedbla.utilities.organization)
+                self.view.replace(edit, r, s)
 
         # --------------------------------------------------------------------------------
         # update authorship
@@ -216,18 +231,6 @@ class UpdateCommentHeaderCommand(sublime_plugin.TextCommand):
                         self.view.replace(edit, original_author_line_region, author_comment)
             else:
                 self.view.erase(edit, original_author_line_region)
-        # --------------------------------------------------------------------------------
-        # update the Copyright notice
-        # --------------------------------------------------------------------------------
-        r = self.view.find("Copyright © .* By %s All rights reserved." % sublime_geedbla.utilities.organization, 0)
-        if not r.empty() and "comment" in self.view.scope_name(r.a):
-            year_region = self.view.find("20[0-9]*", r.a)
-            last_year = self.view.substr(year_region)
-            now = datetime.datetime.now()
-            if int(last_year) < now.year:
-                s = "Copyright © %s-%d By %s All rights reserved." % \
-                    (last_year, datetime.datetime.now().year, sublime_geedbla.utilities.organization)
-                self.view.replace(edit, r, s)
 
 
 class SeperatorLineCommentCommand(sublime_plugin.TextCommand):

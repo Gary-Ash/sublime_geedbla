@@ -7,9 +7,9 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  27-Aug-2020  8:31pm
-# Modified :   9-Jan-2021  7:48pm
+# Modified :  16-Feb-2021 10:31pm
 #
-# Copyright © 2020 By Gee Dbl A All rights reserved.
+# Copyright © 2020-2021 By Gee Dbl A All rights reserved.
 # ****************************************************************************************
 
 import sublime
@@ -34,6 +34,10 @@ class PreferredSetupViewEventListener(sublime_plugin.EventListener):
     def on_activated(self, view):
         preferred_setup()
 
+    def on_deactivated(self, view):
+        preferred_setup()
+
     def on_close(self, view):
         preferred_setup()
+
 

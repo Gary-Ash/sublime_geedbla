@@ -7,7 +7,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  27-Aug-2020  8:31pm
-# Modified :   9-Jan-2021  8:12pm
+# Modified :  18-Mar-2021  6:59pm
 #
 # Copyright © 2020-2021 By Gee Dbl A All rights reserved.
 # ****************************************************************************************
@@ -236,9 +236,9 @@ class UpdateCommentHeaderCommand(sublime_plugin.TextCommand):
 class SeperatorLineCommentCommand(sublime_plugin.TextCommand):
     def run(self, edit, decorator=None):
         if decorator is None:
-            self.view.window().run_command("hide_panel")
-            self.view.window().show_input_panel("Decorator character: ", "-", self.on_done, None, None)
-
+            if self.view.window() is not None:
+                self.view.window().run_command("hide_panel")
+                self.view.window().show_input_panel("Decorator character: ", "-", self.on_done, None, None)
         else:
             self.insetseperator(decorator)
 
@@ -261,8 +261,9 @@ class SeperatorLineCommentCommand(sublime_plugin.TextCommand):
 class BoxCommentCommand(sublime_plugin.TextCommand):
     def run(self, edit, decorator=None):
         if decorator is None:
-            self.view.window().run_command("hide_panel")
-            self.view.window().show_input_panel("Decorator character: ", "*", self.on_done, None, None)
+            if self.view.window() is not None:
+                self.view.window().run_command("hide_panel")
+                self.view.window().show_input_panel("Decorator character: ", "*", self.on_done, None, None)
         else:
             self.insertbox(decorator)
 

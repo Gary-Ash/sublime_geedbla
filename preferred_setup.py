@@ -7,7 +7,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  27-Aug-2020  8:31pm
-# Modified :  16-Feb-2021 10:31pm
+# Modified :  18-Mar-2021  7:00pm
 #
 # Copyright © 2020-2021 By Gee Dbl A All rights reserved.
 # ****************************************************************************************
@@ -39,5 +39,3 @@ class PreferredSetupViewEventListener(sublime_plugin.EventListener):
 
     def on_close(self, view):
         preferred_setup()
-
-

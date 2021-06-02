@@ -7,9 +7,9 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  27-Aug-2020  8:31pm
-# Modified :   1-Sep-2020  3:17pm
+# Modified :  13-Apr-2021 12:39pm
 #
-# Copyright © 2020 By Gee Dbl A All rights reserved.
+# Copyright © 2020-2021 By Gee Dbl A All rights reserved.
 # ****************************************************************************************
 import os
 import sublime
@@ -44,7 +44,6 @@ def load_aettings():
     author = settings.get("author", "Gary Ash")
     email_address = settings.get("email", "gary.ash@icloud.com")
     organization = settings.get("organization", "Gee Dbl A")
-
 
 
 def plugin_unloaded():

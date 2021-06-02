@@ -7,10 +7,10 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  27-Aug-2020  8:31pm
-# Modified :  18-Mar-2021  6:59pm
+# Modified :   1-Jun-2021 11:08pm
 #
-# Copyright © 2020-2021 By Gee Dbl A All rights reserved.
-# ****************************************************************************************
+# Copyright © 20-2021 By Gee Dbl A All rights reserved.
+#*****************************************************************************************
 import re
 import os
 import datetime
@@ -117,7 +117,8 @@ def buildFileHeader(view, do_value_replacement=True):
         "AUTHOR_PLACEHOLDER": sublime_geedbla.utilities.author,
         "EMAIL_PLACEHOLDER": sublime_geedbla.utilities.email_address,
         "ORGANIZATION_PLACEHOLDER": sublime_geedbla.utilities.organization,
-    }
+        "___ORGANIZATIONNAME__": sublime_geedbla.utilities.organization
+     }
 
     for key in comment_replacement:
         header = header.replace(key, comment_replacement[key])
@@ -147,7 +148,8 @@ class ExecutionBitEventListener(sublime_plugin.EventListener):
 class UpdateCommentHeaderCommand(sublime_plugin.TextCommand):
     def run(self, edit):
         r = self.view.find("Copyright © .* By %s All rights reserved." % sublime_geedbla.utilities.organization, 0)
-        if r.empty() or "comment" not in self.view.scope_name(r.a):
+        r2 = self.view.find("Copyright © 20 By Gee Dbl A All rights reserved.", 0)
+        if r.empty() and r2.empty() or "comment" not in self.view.scope_name(r.a):
             return
 
         (_, hdr) = buildFileHeader(self.view)
@@ -193,7 +195,16 @@ class UpdateCommentHeaderCommand(sublime_plugin.TextCommand):
         # update the Copyright notice
         # --------------------------------------------------------------------------------
         r = self.view.find("Copyright © .* By %s All rights reserved." % sublime_geedbla.utilities.organization, 0)
-        if not r.empty() and "comment" in self.view.scope_name(r.a):
+        r2 = self.view.find("Copyright © 20 By Gee Dbl A All rights reserved.", 0)
+
+        if not r2.empty():
+            year_region = self.view.find("20[0-9]*", r2.a)
+            last_year = self.view.substr(year_region)
+            s = "Copyright © %s By %s All rights reserved." % (last_year, sublime_geedbla.utilities.organization)
+            self.view.replace(edit, r2, s)
+
+
+        if not r.empty() or not r2.empty() and "comment" in self.view.scope_name(r.a):
             year_region = self.view.find("20[0-9]*", r.a)
             last_year = self.view.substr(year_region)
             if int(last_year) < now.year:
@@ -250,6 +261,10 @@ class SeperatorLineCommentCommand(sublime_plugin.TextCommand):
 
         (_, column) = sublime_geedbla.utilities.get_cursor_position(self.view)
         (comment_start, comment_end) = sublime_geedbla.utilities.get_comment(self.view)
+        if (sublime_geedbla.utilities.get_syntax(self.view) == "PHP"):
+            comment_end = ""
+            comment_start = "#"
+
         sepLine = comment_start.ljust(sublime_geedbla.utilities.line_length - len(comment_end) - column, decorator) + comment_end + "\n"
         self.view.run_command("insert", {"characters": sepLine})
 
@@ -275,6 +290,10 @@ class BoxCommentCommand(sublime_plugin.TextCommand):
 
         (row, column) = sublime_geedbla.utilities.get_cursor_position(self.view)
         (comment_start, comment_end) = sublime_geedbla.utilities.get_comment(self.view)
+
+        if (sublime_geedbla.utilities.get_syntax(self.view) == "PHP"):
+            comment_end = ""
+            comment_start = "#"
 
         if len(comment_end) > 0:
             first = comment_start.ljust(sublime_geedbla.utilities.line_length - column, decorator) + "\n"

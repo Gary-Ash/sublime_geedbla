@@ -7,10 +7,11 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  27-Aug-2020  8:31pm
-# Modified :   1-Jun-2021 11:08pm
+# Modified :   2-Jun-2021 11:04pm
 #
-# Copyright © 20-2021 By Gee Dbl A All rights reserved.
+# Copyright © 2020-2021 By Gee Dbl A All rights reserved.
 #*****************************************************************************************
+
 import re
 import os
 import datetime
@@ -116,8 +117,8 @@ def buildFileHeader(view, do_value_replacement=True):
         "TIMESTAMP_PLACEHOLDER": timestamp,
         "AUTHOR_PLACEHOLDER": sublime_geedbla.utilities.author,
         "EMAIL_PLACEHOLDER": sublime_geedbla.utilities.email_address,
-        "ORGANIZATION_PLACEHOLDER": sublime_geedbla.utilities.organization,
-        "___ORGANIZATIONNAME__": sublime_geedbla.utilities.organization
+        "ORGANIZATION_PLACEHOLDER": sublime_geedbla.utilities.organizations[0],
+        "___ORGANIZATIONNAME__": sublime_geedbla.utilities.organizations[0]
      }
 
     for key in comment_replacement:
@@ -147,10 +148,35 @@ class ExecutionBitEventListener(sublime_plugin.EventListener):
 
 class UpdateCommentHeaderCommand(sublime_plugin.TextCommand):
     def run(self, edit):
-        r = self.view.find("Copyright © .* By %s All rights reserved." % sublime_geedbla.utilities.organization, 0)
-        r2 = self.view.find("Copyright © 20 By Gee Dbl A All rights reserved.", 0)
-        if r.empty() and r2.empty() or "comment" not in self.view.scope_name(r.a):
+        rCopyright = self.view.find("Copyright © .* By .* All rights reserved.", 0)
+        if rCopyright.empty() or "comment" not in self.view.scope_name(rCopyright.a):
+            print("returned")
             return
+
+        copyrightStr = self.view.substr(rCopyright)
+
+        foundOrg = False
+        for org in sublime_geedbla.utilities.organizations:
+            if org in copyrightStr:
+               foundOrg = True
+               sublime_geedbla.utilities.organization = org
+               break
+
+        if foundOrg == False:
+            return
+
+        # --------------------------------------------------------------------------------
+        # update the Copyright notice
+        # --------------------------------------------------------------------------------
+        now = datetime.datetime.now()
+        year_region = self.view.find("20[0-9]*", rCopyright.a)
+        last_year = self.view.substr(year_region)
+
+        if int(last_year) < now.year:
+            s = "Copyright © %s-%d By %s All rights reserved." % (last_year, datetime.datetime.now().year, sublime_geedbla.utilities.organization)
+        else:
+            s = "Copyright © %s By %s All rights reserved." % (last_year, sublime_geedbla.utilities.organization)
+        self.view.replace(edit, rCopyright, s)
 
         (_, hdr) = buildFileHeader(self.view)
 
@@ -175,42 +201,29 @@ class UpdateCommentHeaderCommand(sublime_plugin.TextCommand):
                         self.view.replace(edit, r, new_file_name)
 
         # --------------------------------------------------------------------------------
-        # update the file modification time stamp
+        # update the file creation time stamp
         # --------------------------------------------------------------------------------
-        r = self.view.find("Modified :.*$", 0)
+        r = self.view.find("Created.*:.*$", 0)
         if not r.empty() and "comment" in self.view.scope_name(r.a):
-            now = datetime.datetime.now()
-            timestamp = now.strftime("  %e-%b-%Y %_I:%M")
-            timestamp += now.strftime("%p").lower()
-
             r2 = self.view.find(":.*", r.a)
             if not r2.empty() and "comment" in self.view.scope_name(r.a):
                 r2.a = r2.a + 1
-                self.view.erase(edit, r2)
-                self.view.insert(edit, r2.a, timestamp)
-            else:
-                self.view.insert(edit, r.b, timestamp)
+                dateStr = self.view.substr(r2)
+                if "/" in dateStr:
+                    dateStr = dateStr.strip()
+                    created = datetime.datetime.strptime(dateStr, '%m/%d/%y %H:%M %p')
+                    timestamp = created.strftime("Created  :  %_e-%b-%Y %_I:%M")
+                    timestamp += created.strftime("%p").lower()
+                    self.view.replace(edit, r, timestamp)
 
         # --------------------------------------------------------------------------------
-        # update the Copyright notice
+        # update the file modification time stamp
         # --------------------------------------------------------------------------------
-        r = self.view.find("Copyright © .* By %s All rights reserved." % sublime_geedbla.utilities.organization, 0)
-        r2 = self.view.find("Copyright © 20 By Gee Dbl A All rights reserved.", 0)
-
-        if not r2.empty():
-            year_region = self.view.find("20[0-9]*", r2.a)
-            last_year = self.view.substr(year_region)
-            s = "Copyright © %s By %s All rights reserved." % (last_year, sublime_geedbla.utilities.organization)
-            self.view.replace(edit, r2, s)
-
-
-        if not r.empty() or not r2.empty() and "comment" in self.view.scope_name(r.a):
-            year_region = self.view.find("20[0-9]*", r.a)
-            last_year = self.view.substr(year_region)
-            if int(last_year) < now.year:
-                s = "Copyright © %s-%d By %s All rights reserved." % \
-                    (last_year, datetime.datetime.now().year, sublime_geedbla.utilities.organization)
-                self.view.replace(edit, r, s)
+        r = self.view.find("Modified.*:.*$", 0)
+        if not r.empty() and "comment" in self.view.scope_name(r.a):
+            timestamp = now.strftime("Modified :  %_e-%b-%Y %_I:%M")
+            timestamp += now.strftime("%p").lower()
+            self.view.replace(edit, r, timestamp)
 
         # --------------------------------------------------------------------------------
         # update authorship

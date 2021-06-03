@@ -7,7 +7,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  27-Aug-2020  8:31pm
-# Modified :  13-Apr-2021 12:39pm
+# Modified :   2-Jun-2021  5:16pm
 #
 # Copyright © 2020-2021 By Gee Dbl A All rights reserved.
 # ****************************************************************************************
@@ -24,7 +24,7 @@ def plugin_loaded():
         settings.set("line_length", 90)
         settings.set("author", "")
         settings.set("email", "")
-        settings.set("organization", "")
+        settings.set("organizations", [])
         sublime.save_settings("sublime_geedbla.sublime-settings")
 
     load_aettings()
@@ -35,7 +35,7 @@ def plugin_loaded():
 def load_aettings():
     global author
     global email_address
-    global organization
+    global organizations
     global line_length
 
     settings = sublime.load_settings("sublime_geedbla.sublime-settings")
@@ -43,7 +43,8 @@ def load_aettings():
     line_length = settings.get("line_length", 90)
     author = settings.get("author", "Gary Ash")
     email_address = settings.get("email", "gary.ash@icloud.com")
-    organization = settings.get("organization", "Gee Dbl A")
+    organizations = settings.get("organizations", ["Gee Dbl A"])
+    organization = organizations[0]
 
 
 def plugin_unloaded():

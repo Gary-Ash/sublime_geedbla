@@ -7,7 +7,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  27-Aug-2020  8:31pm
-# Modified :   2-Jun-2021 11:04pm
+# Modified :   3-Jun-2021 12:35pm
 #
 # Copyright © 2020-2021 By Gee Dbl A All rights reserved.
 #*****************************************************************************************
@@ -117,8 +117,8 @@ def buildFileHeader(view, do_value_replacement=True):
         "TIMESTAMP_PLACEHOLDER": timestamp,
         "AUTHOR_PLACEHOLDER": sublime_geedbla.utilities.author,
         "EMAIL_PLACEHOLDER": sublime_geedbla.utilities.email_address,
-        "ORGANIZATION_PLACEHOLDER": sublime_geedbla.utilities.organizations[0],
-        "___ORGANIZATIONNAME__": sublime_geedbla.utilities.organizations[0]
+        "ORGANIZATION_PLACEHOLDER": sublime_geedbla.utilities.organization,
+        "___ORGANIZATIONNAME__": sublime_geedbla.utilities.organization
      }
 
     for key in comment_replacement:

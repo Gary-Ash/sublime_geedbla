@@ -7,7 +7,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  27-Aug-2020  8:31pm
-# Modified :   2-Jun-2021  5:16pm
+# Modified :   3-Jun-2021 12:34pm
 #
 # Copyright © 2020-2021 By Gee Dbl A All rights reserved.
 # ****************************************************************************************
@@ -37,6 +37,7 @@ def load_aettings():
     global email_address
     global organizations
     global line_length
+    global organization
 
     settings = sublime.load_settings("sublime_geedbla.sublime-settings")
 

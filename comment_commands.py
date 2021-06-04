@@ -7,7 +7,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  27-Aug-2020  8:31pm
-# Modified :   3-Jun-2021 12:35pm
+# Modified :   4-Jun-2021 12:59pm
 #
 # Copyright © 2020-2021 By Gee Dbl A All rights reserved.
 #*****************************************************************************************
@@ -150,7 +150,6 @@ class UpdateCommentHeaderCommand(sublime_plugin.TextCommand):
     def run(self, edit):
         rCopyright = self.view.find("Copyright © .* By .* All rights reserved.", 0)
         if rCopyright.empty() or "comment" not in self.view.scope_name(rCopyright.a):
-            print("returned")
             return
 
         copyrightStr = self.view.substr(rCopyright)

@@ -7,13 +7,14 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  27-Aug-2020  8:31pm
-# Modified :   4-Dec-2023  2:11pm
+# Modified :   8-Mar-2024  9:32pm
 #
-# Copyright © 2020-2023 By Gee Dbl A All rights reserved.
+# Copyright © 2020-2024 By Gee Dbl A All rights reserved.
 # ****************************************************************************************
 import os
 import sublime
 import sublime_plugin
+import sublime_geedbla.utilities
 
 
 class EditConfigFiles(sublime_plugin.WindowCommand):
@@ -33,8 +34,9 @@ class EditConfigFiles(sublime_plugin.WindowCommand):
                 data = {"folders": [{"path": config}]}
 
             folders = data["folders"]
-            folders.append({"path": "/opt/bin/geedbla"})
-            folders.append({"path": "/opt/lib/geedbla"})
+            for f in sublime_geedbla.utilities.folders_to_open:
+                folders.append({"path": f})
+
             folders.append({"path": "~/.ssh"})
             data["folders"] = folders
 

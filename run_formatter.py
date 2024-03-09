@@ -8,9 +8,9 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  27-Aug-2020  8:31pm
-# Modified :  26-Dec-2023  7:55pm
+# Modified :   5-Mar-2024 10:26pm
 #
-# Copyright © 2020-2023 By Gee Dbl A All rights reserved.
+# Copyright © 2020-2024 By Gee Dbl A All rights reserved.
 # ****************************************************************************************
 
 import os
@@ -200,7 +200,7 @@ class UniversalFormatSource(sublime_plugin.TextCommand):
             return command
         elif language == "Bash":
             command = [settings.get("shfmt exec", "shfmt")]
-            cfg_file = settings.get("shfmt config", "-s -ci -i 0 -ln bash -")
+            cfg_file = settings.get("shfmt config", "-ln bash -i 0 -s -ci -")
             cfg_list = cfg_file.split()
             command.extend(cfg_list)
             return command

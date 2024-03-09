@@ -7,9 +7,9 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  27-Aug-2020  8:31pm
-# Modified :  18-Jul-2022  1:11pm
+# Modified :   8-Mar-2024  9:07pm
 #
-# Copyright © 2020-2022 By Gee Dbl A All rights reserved.
+# Copyright © 2020-2024 By Gee Dbl A All rights reserved.
 # ****************************************************************************************
 import os
 import sublime
@@ -25,6 +25,7 @@ def plugin_loaded():
         settings.set("author", "")
         settings.set("email", "")
         settings.set("organizations", [])
+        settings.set("folders_to_open", [])
         sublime.save_settings("sublime_geedbla.sublime-settings")
 
     load_aettings()
@@ -39,6 +40,7 @@ def load_aettings():
     global line_length
     global organization
     global organizations
+    global folders_to_open
 
     settings = sublime.load_settings("sublime_geedbla.sublime-settings")
 
@@ -46,6 +48,8 @@ def load_aettings():
     author = settings.get("author", "Gary Ash")
     email_address = settings.get("email", "gary.ash@icloud.com")
     organizations = settings.get("organizations", ["Gee Dbl A"])
+    folders_to_open = settings.get("folders_to_open", ["/opt/geedbla"])
+
     try:
         organization = organizations[0]
     except:

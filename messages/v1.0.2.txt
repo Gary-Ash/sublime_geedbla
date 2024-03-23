@@ -1,0 +1,4 @@
+=> v1.0.2
+
+# Improved the event handler that maintains my preferred window setup
+It should do a better job of resetting after the use of Find, Find and Replace, etc

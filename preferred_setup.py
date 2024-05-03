@@ -7,7 +7,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  28-Apr-2024  1:46pm
-# Modified :
+# Modified :   3-May-2024  4:39pm
 #
 # Copyright © 2024 By Gary Ash All rights reserved.
 # ****************************************************************************************
@@ -15,12 +15,9 @@
 import sublime
 import sublime_plugin
 
-firstTime = True
-
 
 def plugin_loaded():
-    global firstTime
-    firstTime = True
+    pass
 
 
 def preferred_setup():
@@ -35,11 +32,7 @@ def preferred_setup():
 
 class PreferredSetupViewEventListener(sublime_plugin.EventListener):
     def on_activated(self, view):
-        global firstTime
-
-        if firstTime or view.file_name() is not None:
-            preferred_setup()
-            firstTime = False
+        preferred_setup()
 
     def on_deactivated(self, view):
         preferred_setup()

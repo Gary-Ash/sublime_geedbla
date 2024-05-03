@@ -1,0 +1,3 @@
+=> v1.0.1
+
+# Updated the method of window set up

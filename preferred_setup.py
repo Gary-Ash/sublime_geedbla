@@ -7,7 +7,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  28-Apr-2024  1:46pm
-# Modified :   3-May-2024  4:39pm
+# Modified :   9-May-2024  7:53pm
 #
 # Copyright © 2024 By Gary Ash All rights reserved.
 # ****************************************************************************************
@@ -17,7 +17,7 @@ import sublime_plugin
 
 
 def plugin_loaded():
-    pass
+    preferred_setup()
 
 
 def preferred_setup():
@@ -31,11 +31,12 @@ def preferred_setup():
 
 
 class PreferredSetupViewEventListener(sublime_plugin.EventListener):
-    def on_activated(self, view):
-        preferred_setup()
-
     def on_deactivated(self, view):
         preferred_setup()
 
     def on_close(self, view):
         preferred_setup()
+
+    def on_post_window_command(self, window, command_name, args):
+        if command_name == "hide_panel":
+            preferred_setup()

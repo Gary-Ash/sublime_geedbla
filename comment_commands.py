@@ -7,7 +7,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  28-Apr-2024  1:46pm
-# Modified :
+# Modified :   1-Jul-2024  4:50pm
 #
 # Copyright © 2024 By Gary Ash All rights reserved.
 # ****************************************************************************************
@@ -246,7 +246,7 @@ class UpdateCommentHeaderCommand(sublime_plugin.TextCommand):
                 dateStr = self.view.substr(r2)
                 if "/" in dateStr:
                     dateStr = dateStr.strip()
-                    created = datetime.datetime.strptime(dateStr, "%m/%d/%y %H:%M %p")
+                    created = datetime.datetime.strptime(dateStr, "%m/%d/%y %_H:%M %p")
                     timestamp = created.strftime("Created  :  %_e-%b-%Y %_I:%M")
                     timestamp += created.strftime("%p").lower()
                     self.view.replace(edit, r, timestamp)

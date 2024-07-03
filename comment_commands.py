@@ -7,7 +7,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  28-Apr-2024  1:46pm
-# Modified :   1-Jul-2024  4:50pm
+# Modified :   2-Jul-2024  9:09pm
 #
 # Copyright © 2024 By Gary Ash All rights reserved.
 # ****************************************************************************************
@@ -246,17 +246,16 @@ class UpdateCommentHeaderCommand(sublime_plugin.TextCommand):
                 dateStr = self.view.substr(r2)
                 if "/" in dateStr:
                     dateStr = dateStr.strip()
-                    created = datetime.datetime.strptime(dateStr, "%m/%d/%y %_H:%M %p")
-                    timestamp = created.strftime("Created  :  %_e-%b-%Y %_I:%M")
+                    created = datetime.datetime.strptime(dateStr, "%_e-%b %Y %_I:M%P")
+                    timestamp = created.strftime("Created  :  %_e-%b %Y %_I:M%P")
                     timestamp += created.strftime("%p").lower()
                     self.view.replace(edit, r, timestamp)
-
         # --------------------------------------------------------------------------------
         # update the file modification time stamp
         # --------------------------------------------------------------------------------
         r = self.view.find("Modified.*:.*$", 0)
         if not r.empty() and "comment" in self.view.scope_name(r.a):
-            timestamp = self.now.strftime("Modified :  %_e-%b-%Y %_I:%M")
+            timestamp = self.now.strftime("Modified :  %_e-%b %Y %_I:M%P")
             timestamp += self.now.strftime("%p").lower()
             self.view.replace(edit, r, timestamp)
 

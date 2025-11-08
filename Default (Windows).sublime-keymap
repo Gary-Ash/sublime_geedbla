@@ -1,0 +1,15 @@
+[
+	{ "keys": ["ctrl+shift+alt+b"], "command": "box_comment"       			},
+	{ "keys": ["ctrl+shift+alt+b", "-"], "command": "box_comment", "args": {"decorator": "-"}},
+	{ "keys": ["ctrl+shift+alt+b", "="], "command": "box_comment", "args": {"decorator": "="}},
+	{ "keys": ["ctrl+shift+alt+b", "*"], "command": "box_comment", "args": {"decorator": "*"}},
+
+	{ "keys": ["ctrl+shift+alt+l"], "command": "seperator_line_comment"  	},
+	{ "keys": ["ctrl+shift+alt+l", "-"], "command": "seperator_line_comment", "args": {"decorator": "-"}},
+	{ "keys": ["ctrl+shift+alt+l", "="], "command": "seperator_line_comment", "args": {"decorator": "="}},
+	{ "keys": ["ctrl+shift+alt+l", "*"], "command": "seperator_line_comment", "args": {"decorator": "*"}},
+
+	{ "keys": ["ctrl+shift+alt+h"], "command": "header_comment"    			},
+	{ "keys": ["ctrl+shift+alt+f"], "command": "universal_format_source" 	},
+
+]

@@ -1,0 +1,15 @@
+{
+	"schema_version": "4.0.0",
+	"packages": [{
+		"name": "Sublime GeeDblA",
+		"description": "My Sublime Text multi-tool plugin",
+		"author": "Gary Ash",
+		"details": "https://github.com/Gary-Ash/sublime_geedbla",
+		"homepage": "https://github.com/Gary-Ash/sublime_geedbla",
+		"issues": "https://github.com/Gary-Ash/sublime_geedbla/issues",
+		"releases": [{
+			"sublime_text": ">=4000",
+			"tags": true
+		}]
+	}]
+}

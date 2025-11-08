@@ -1,0 +1,98 @@
+[
+  {
+    "caption": "Edit",
+    "mnemonic": "E",
+    "id": "edit",
+    "children": [
+      {
+      "id": "edit-geedbla",
+	  "caption": "-",
+	},
+	{
+       "caption": "Gee Dbl A",
+        "children": [
+          {
+            "caption": "Box Comment",
+            "command": "box_comment"
+          },
+          {
+            "caption": "File Header Comment",
+            "command": "header_comment"
+          },
+          {
+            "caption": "Seperator Line Comment",
+            "command": "seperator_line_comment"
+          },
+          {
+            "caption": "Edit File Header Comment Template",
+            "command": "edit_file_header_template"
+          },
+          {
+            "caption": "-"
+          },
+          {
+            "caption": "Format The File",
+            "command": "universal_format_source"
+          },
+          {
+            "caption": "-"
+          },
+          {
+            "caption": "Edit Configuration Files",
+            "command": "edit_config_files"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "caption": "Selection",
+    "mnemonic": "E",
+    "id": "selection",
+    "children": [
+      {
+      "id": "selection-geedbla",
+       "caption": "-"
+      },
+      {
+        "caption": "Gee Dbl A",
+        "children": [
+          {
+            "caption": "Create New File From Selection",
+            "command": "new_from_selection"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "caption": "Preferences",
+    "mnemonic": "n",
+    "id": "preferences",
+    "children": [
+      {
+        "caption": "Package Settings",
+        "mnemonic": "P",
+        "id": "package-settings",
+        "children": [
+          {
+            "caption": "Gee Dbl A",
+            "children": [
+              {
+                "command": "open_file",
+                "caption": "Settings",
+                "args": {
+                  "file": "${packages}/User/sublime_geedbla.sublime-settings",
+                  "contents": "{\n\t$0\n}\n"
+                }
+              },
+              {
+                "caption": "-"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]
